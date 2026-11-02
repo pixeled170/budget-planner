@@ -282,11 +282,13 @@ function renderHome() {
   const expPrev = spend(pm, pm + el);
   const inc = income(m0, now + 1);
   const bal = totalBalance();
+  const noBal = S.accounts.filter((a) => a.include !== false && !a.demo && accBalance(a) == null);
   const month = fmtDate(now, { month: 'long' });
 
   let h = `<section class="hero card">
     <div class="label">${bal != null ? t('home.balance') : t('home.spentMonth', { m: month })}</div>
     <div class="hero-num">${bal != null ? fmt(bal) : fmt(exp)}</div>
+    ${noBal.length ? `<button class="demo-note wide-note" data-action="accEdit" data-id="${noBal[0].id}">ℹ️ ${t('home.noBal', { a: esc(noBal.map((a) => a.name).join(', ')) })}</button>` : ''}
     ${S.demo ? `<div class="demo-note">✨ ${t('home.demoNote')} <button class="link" data-action="demoClear">${t('home.demoClear')}</button></div>` : ''}
   </section>
   <div class="tiles">
@@ -893,10 +895,11 @@ function importMapSheet() {
     ${res.tx.length ? `<div class="label">${t('imp.preview')}</div><div class="list">${res.tx.slice(0, 5).map((x) => `<div class="row"><span class="em">${cat(x.cat).emoji}</span><span class="grow"><b>${esc(x.desc)}</b><small>${fmtDate(x.date)} · ${esc(catName(x.cat))}</small></span><span class="amt ${x.amount > 0 ? 'pos' : ''}">${fmt(x.amount, x.cur, { sign: true })}</span></div>`).join('')}</div>` : ''}
     ${!res.tx.length && !res.dups && I2.rows.fromPdf ? `<div class="hint-box">${t('imp.pdfNoTx')}</div>` : ''}
     <details ${res.tx.length || I2.rows.fromPdf ? '' : 'open'}><summary>${t('imp.columns')}</summary>
-      <div class="map-grid">${opt('date', 1)}${opt('amount', 1)}${opt('desc')}${opt('desc2')}${opt('currency')}${opt('category')}${opt('mcc')}${opt('time')}${opt('fee')}${opt('state')}</div>
+      <div class="map-grid">${opt('date', 1)}${opt('amount', 1)}${opt('desc')}${opt('desc2')}${opt('currency')}${opt('category')}${opt('mcc')}${opt('time')}${opt('fee')}${opt('state')}${opt('balance')}</div>
       <label class="check"><input type="checkbox" id="impInvert" ${I2.map.invert ? 'checked' : ''}> ${t('imp.invert')}</label>
     </details>
-    <button class="btn primary big" data-action="impCommit" ${res.tx.length ? '' : 'disabled'}>${t('imp.do', { n: res.tx.length })}</button>`, { back: 'openImport' });
+    ${res.lastBal ? `<p class="muted small">${t('imp.balFound', { v: fmt(res.lastBal.bal, a.cur), d: fmtDate(res.lastBal.date) })}</p>` : ''}
+    <button class="btn primary big" data-action="impCommit" ${res.tx.length || (res.lastBal && a.id !== '__new') ? '' : 'disabled'}>${res.tx.length ? t('imp.do', { n: res.tx.length }) : t('imp.updBal')}</button>`, { back: 'openImport' });
 }
 
 /* ---------- categories ---------- */
@@ -1190,11 +1193,11 @@ const A = {
       F.imp.result = Imp.parseRows(F.imp.rows, F.imp.headerIdx, F.imp.map, { accId: a.id, cur, headers: F.imp.headers });
     }
     Imp.rememberMap(F.imp.preset, F.imp.headers, F.imp.map);
-    Imp.commit(F.imp.result.tx);
+    Imp.commit(F.imp.result.tx, a, F.imp.result.lastBal);
     save();
     closeSheet();
     render();
-    toast(t('imp.done', { n: F.imp.result.tx.length }));
+    toast(F.imp.result.tx.length ? t('imp.done', { n: F.imp.result.tx.length }) : t('imp.balUpdated'));
   },
 
   ratesSheet: () => {

@@ -20,7 +20,7 @@ const ru = {
   'home.welcome': 'Добро пожаловать!', 'home.welcomeText': 'Добавь первые операции — и здесь появятся графики, подсказки и прогресс целей.',
   'home.connectMono': 'Подключить Monobank', 'home.import': 'Импортировать выписку', 'home.manual': 'Добавить вручную', 'home.demo': 'Загрузить демо-данные',
   'home.balance': 'Баланс на счетах', 'home.spentMonth': 'Потрачено за {m}', 'home.demoNote': 'Сейчас показаны демо-данные.', 'home.demoClear': 'Удалить демо-данные',
-  'home.expenses': 'Расходы', 'home.income': 'Доходы', 'home.vsSame': 'к тому же периоду прошлого месяца', 'home.left': 'Остаток',
+  'home.noBal': 'Не указан баланс: {a}. Нажми, чтобы ввести — тогда он войдёт в общий баланс.', 'home.expenses': 'Расходы', 'home.income': 'Доходы', 'home.vsSame': 'к тому же периоду прошлого месяца', 'home.left': 'Остаток',
   'home.week': 'Последние 7 дней', 'home.avgDay': 'в среднем', 'home.tips': 'Подсказки', 'home.allTips': 'Все ({n})', 'home.recent': 'Последние операции',
 
   'tx.add': 'Новая операция', 'tx.edit': 'Операция', 'tx.empty': 'Пока нет операций', 'tx.emptyText': 'Подключи банк или добавь трату вручную.',
@@ -89,7 +89,7 @@ const ru = {
   'imp.reading': 'Читаю файл…', 'imp.noTxPdf': 'В этом файле нет операций', 'imp.pdfNoTx': 'В этом PDF нет списка операций — похоже, это <b>справка с итогами</b> за период (поступления, траты, остаток). Нужна выписка, где перечислена каждая операция: в Приват24 открой саму карту → история операций → «Виписка» за период. Или скачай Excel в веб-версии privat24.ua.', 'imp.emptyFile': 'файл пустой', 'imp.err': 'Не удалось прочитать файл', 'imp.xlsxErr': 'Для Excel и PDF нужен интернет один раз (загрузка модуля). Проверь подключение и попробуй снова.',
   'imp.check': 'Проверь импорт', 'imp.found': 'Найдено операций: {n}', 'imp.none': 'Операции не распознаны — проверь столбцы ниже', 'imp.dups': 'уже загружено раньше: {n}', 'imp.bad': 'пропущено строк: {n}',
   'imp.preview': 'Первые операции', 'imp.columns': 'Столбцы файла', 'imp.invert': 'Поменять знак сумм (если расходы в файле положительные)', 'imp.do': 'Импортировать ({n})', 'imp.done': 'Импортировано операций: {n}', 'imp.allDup': 'Все операции из этого файла уже загружены',
-  'imp.f.date': 'Дата', 'imp.f.amount': 'Сумма', 'imp.f.desc': 'Описание', 'imp.f.desc2': 'Получатель / отправитель', 'imp.f.currency': 'Валюта', 'imp.f.category': 'Категория банка', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Время', 'imp.f.fee': 'Комиссия', 'imp.f.state': 'Статус',
+  'imp.f.date': 'Дата', 'imp.f.amount': 'Сумма', 'imp.f.desc': 'Описание', 'imp.f.desc2': 'Получатель / отправитель', 'imp.f.currency': 'Валюта', 'imp.f.category': 'Категория банка', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Время', 'imp.f.fee': 'Комиссия', 'imp.f.state': 'Статус', 'imp.f.balance': 'Остаток после операции', 'imp.balFound': 'Баланс счёта по выписке: {v} (на {d})', 'imp.updBal': 'Обновить баланс счёта', 'imp.balUpdated': 'Баланс счёта обновлён',
 
   'rates.src': 'Источник: {s}, обновлено {d}', 'rates.default': 'примерные курсы', 'rates.manual': 'вручную', 'rates.refresh': 'Обновить по курсу НБУ', 'rates.ok': 'Курсы обновлены', 'rates.fail': 'Не удалось обновить курсы',
   'rates.note': 'Курсы обновляются автоматически раз в несколько часов (официальный курс НБУ). Для итогов все суммы пересчитываются по текущему курсу.',
@@ -150,7 +150,7 @@ const en = {
   'home.welcome': 'Welcome!', 'home.welcomeText': 'Add your first transactions and you will see charts, tips and goal progress here.',
   'home.connectMono': 'Connect Monobank', 'home.import': 'Import a statement', 'home.manual': 'Add manually', 'home.demo': 'Load demo data',
   'home.balance': 'Total balance', 'home.spentMonth': 'Spent in {m}', 'home.demoNote': 'You are looking at demo data.', 'home.demoClear': 'Remove demo data',
-  'home.expenses': 'Spent', 'home.income': 'Income', 'home.vsSame': 'vs same period last month', 'home.left': 'Left',
+  'home.noBal': 'No balance set for: {a}. Tap to enter it so it counts in the total.', 'home.expenses': 'Spent', 'home.income': 'Income', 'home.vsSame': 'vs same period last month', 'home.left': 'Left',
   'home.week': 'Last 7 days', 'home.avgDay': 'avg', 'home.tips': 'Tips', 'home.allTips': 'All ({n})', 'home.recent': 'Recent transactions',
 
   'tx.add': 'New transaction', 'tx.edit': 'Transaction', 'tx.empty': 'No transactions yet', 'tx.emptyText': 'Connect a bank or add an expense manually.',
@@ -219,7 +219,7 @@ const en = {
   'imp.reading': 'Reading file…', 'imp.noTxPdf': 'No transactions in this file', 'imp.pdfNoTx': 'This PDF has no list of transactions — it looks like a <b>summary certificate</b> (totals only). You need a statement listing every transaction: in Privat24 open the card → transaction history → “Виписка” for a period. Or download Excel from privat24.ua on the web.', 'imp.emptyFile': 'the file is empty', 'imp.err': 'Could not read the file', 'imp.xlsxErr': 'Excel and PDF import need internet once (to load a module). Check your connection and try again.',
   'imp.check': 'Check import', 'imp.found': '{n} transactions found', 'imp.none': 'No transactions recognized — check the columns below', 'imp.dups': '{n} already imported', 'imp.bad': '{n} rows skipped',
   'imp.preview': 'First transactions', 'imp.columns': 'File columns', 'imp.invert': 'Flip amount sign (if expenses are positive in the file)', 'imp.do': 'Import {n}', 'imp.done': '{n} transactions imported', 'imp.allDup': 'All transactions from this file are already imported',
-  'imp.f.date': 'Date', 'imp.f.amount': 'Amount', 'imp.f.desc': 'Description', 'imp.f.desc2': 'Payee / payer', 'imp.f.currency': 'Currency', 'imp.f.category': 'Bank category', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Time', 'imp.f.fee': 'Fee', 'imp.f.state': 'Status',
+  'imp.f.date': 'Date', 'imp.f.amount': 'Amount', 'imp.f.desc': 'Description', 'imp.f.desc2': 'Payee / payer', 'imp.f.currency': 'Currency', 'imp.f.category': 'Bank category', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Time', 'imp.f.fee': 'Fee', 'imp.f.state': 'Status', 'imp.f.balance': 'Balance after operation', 'imp.balFound': 'Account balance from the statement: {v} (as of {d})', 'imp.updBal': 'Update account balance', 'imp.balUpdated': 'Account balance updated',
 
   'rates.src': 'Source: {s}, updated {d}', 'rates.default': 'approximate rates', 'rates.manual': 'manual', 'rates.refresh': 'Update from NBU', 'rates.ok': 'Rates updated', 'rates.fail': 'Could not update rates',
   'rates.note': 'Rates update automatically every few hours (official NBU rate). Totals convert all amounts at the current rate.',

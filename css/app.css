@@ -124,6 +124,7 @@ section > .insight + .insight { margin-top: 8px; }
 .hero-num { font-size: 42px; font-weight: 750; letter-spacing: -0.03em; line-height: 1.1; margin-top: 4px; font-variant-numeric: normal; }
 .hero-num.mid { font-size: 34px; margin-top: 12px; }
 .hero-sub { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 6px 0 4px; font-size: 13px; }
+.wide-note { display: block; width: 100%; text-align: left; }
 .demo-note { margin-top: 10px; font-size: 13px; color: var(--ink-2); background: var(--card-2); padding: 8px 10px; border-radius: 10px; }
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .tile { background: var(--card); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 2px; min-width: 0; }

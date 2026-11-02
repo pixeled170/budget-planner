@@ -22,6 +22,7 @@ export const FIELDS = {
   state: ['state', 'status', 'статус', 'stan'],
   type: ['тип операції', 'тип операции', 'type', 'typ operacji', 'typ transakcji', 'rodzaj'],
   fee: ['fee', 'сума комісій', 'комісія', 'комиссия', 'prowizja'],
+  balance: ['залишок', 'остаток', 'баланс', 'balance', 'saldo'],
 };
 const OPTIONAL_AUTO = { fee: ['revolut'] };
 
@@ -234,8 +235,6 @@ function findHeader(rows) {
 export function detect(rows, preset) {
   const headerIdx = findHeader(rows);
   const headers = headerIdx >= 0 ? rows[headerIdx].map((h) => String(h ?? '').trim()) : rows[0].map((_, i) => `#${i + 1}`);
-  const saved = S.importMaps[preset];
-  if (saved && saved.sig === headers.join('|')) return { headerIdx, headers, map: { ...saved.map } };
   const used = new Set();
   const map = {};
   const nh = headers.map(norm);
@@ -252,6 +251,9 @@ export function detect(rows, preset) {
     }
   }
   map.invert = false;
+  // columns the user adjusted for this bank earlier win; fields added later keep the auto-detected column
+  const saved = S.importMaps[preset];
+  if (saved && saved.sig === headers.join('|')) Object.assign(map, saved.map);
   return { headerIdx, headers, map };
 }
 
@@ -312,7 +314,7 @@ export function parseRows(rows, headerIdx, map, { accId, cur, headers }) {
   const existing = new Set(S.tx.filter((x) => x.acc === accId).map((x) => x.hash));
   const seen = new Map();
   const out = [];
-  let dups = 0, bad = 0;
+  let dups = 0, bad = 0, lastBal = null;
   const get = (r, f) => (map[f] >= 0 ? r[map[f]] : '');
   for (let i = headerIdx + 1; i < rows.length; i++) {
     const r = rows[i];
@@ -333,6 +335,8 @@ export function parseRows(rows, headerIdx, map, { accId, cur, headers }) {
     if (!CURRENCIES.includes(c)) c = cur;
     const mcc = parseInt(get(r, 'mcc')) || 0;
     const bankCat = `${get(r, 'category') ?? ''} ${get(r, 'type') ?? ''}`.trim();
+    const bal = map.balance >= 0 ? parseAmount(get(r, 'balance')) : NaN;
+    if (isFinite(bal) && (!lastBal || date > lastBal.date)) lastBal = { date, bal };
     let h = hashOf(accId, date, amount, desc);
     const n = (seen.get(h) || 0) + 1;
     seen.set(h, n);
@@ -341,10 +345,15 @@ export function parseRows(rows, headerIdx, map, { accId, cur, headers }) {
     out.push({ id: uid(), acc: accId, date, amount: Math.round(amount * 100) / 100, cur: c, desc, mcc, bankCat, cat: categorize({ desc, mcc, amount, bankCat }, S.rules), src: 'import', hash: h });
   }
   out.sort((a, b) => b.date - a.date);
-  return { tx: out, dups, bad };
+  return { tx: out, dups, bad, lastBal };
 }
 
-export function commit(list) {
+// Adds transactions; the newest row's "balance after operation" becomes the account balance.
+export function commit(list, account, lastBal) {
+  if (account && lastBal && (account.balance == null || lastBal.date >= (account.balanceTs || 0))) {
+    account.balance = lastBal.bal;
+    account.balanceTs = lastBal.date;
+  }
   for (const x of list) {
     delete x.bankCat;
     S.tx.push(x);
