@@ -864,8 +864,6 @@ async function onImportFile(file) {
   const preset = F.imp.preset;
   let accId = $('#iAcc').value;
   try {
-    const head = new Uint8Array(await file.slice(0, 5).arrayBuffer());
-    if (/\.pdf$/i.test(file.name) || String.fromCharCode(...head) === '%PDF-') return sheet(t('imp.pdfTitle'), `<p>${t('imp.pdf')}</p><div class="hint-box">${t('imp.how.' + preset)}</div><button class="btn primary big" data-action="openImport">${t('imp.choose')}</button>`);
     toast(t('imp.reading'));
     const rows = await Imp.readTable(file, preset);
     if (rows.length < 2) throw new Error(t('imp.emptyFile'));
@@ -873,7 +871,7 @@ async function onImportFile(file) {
     F.imp = { ...F.imp, rows, ...det, accId, fileName: file.name };
     importMapSheet();
   } catch (e) {
-    toast(e.message === 'xlsx-load' ? t('imp.xlsxErr') : t('imp.err') + ': ' + e.message);
+    toast(e.message === 'lib-load' ? t('imp.xlsxErr') : t('imp.err') + ': ' + e.message);
   }
 }
 

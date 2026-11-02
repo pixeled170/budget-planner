@@ -28,21 +28,28 @@ const OPTIONAL_AUTO = { fee: ['revolut'] };
 const norm = (s) => String(s ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
 
 /* ---------- reading ---------- */
-let xlsxPromise = null;
-function loadXLSX() {
-  if (window.XLSX) return Promise.resolve(window.XLSX);
-  if (!xlsxPromise)
-    xlsxPromise = new Promise((res, rej) => {
+const libs = {};
+function loadScript(src, name) {
+  if (window[name]) return Promise.resolve(window[name]);
+  if (!libs[src])
+    libs[src] = new Promise((res, rej) => {
       const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-      s.onload = () => res(window.XLSX);
+      s.src = src;
+      s.onload = () => res(window[name]);
       s.onerror = () => {
-        xlsxPromise = null;
-        rej(new Error('xlsx-load'));
+        delete libs[src];
+        rej(new Error('lib-load'));
       };
       document.head.appendChild(s);
     });
-  return xlsxPromise;
+  return libs[src];
+}
+const loadXLSX = () => loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', 'XLSX');
+const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+async function loadPDFJS() {
+  const lib = await loadScript(PDFJS + 'pdf.min.js', 'pdfjsLib');
+  lib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js';
+  return lib;
 }
 
 function decodeText(buf, preset) {
@@ -80,6 +87,7 @@ export function parseCSV(text) {
 
 export async function readTable(file, preset) {
   const buf = await file.arrayBuffer();
+  if (String.fromCharCode(...new Uint8Array(buf.slice(0, 5))) === '%PDF-') return pdfToRows(buf);
   const isXlsx = /\.(xlsx|xls|xlsm)$/i.test(file.name) || new Uint8Array(buf.slice(0, 2)).join() === '80,75';
   if (isXlsx) {
     const XLSX = await loadXLSX();
@@ -93,6 +101,100 @@ export async function readTable(file, preset) {
     return best.filter((r) => r.some((c) => String(c).trim() !== ''));
   }
   return parseCSV(decodeText(buf, preset));
+}
+
+/* ---------- PDF ---------- */
+// Text lines of all pages, top to bottom: [{page, y, items: [{s, x, w}]}]
+async function pdfLines(buf) {
+  const pdfjs = await loadPDFJS();
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
+  const out = [];
+  for (let p = 1; p <= doc.numPages; p++) {
+    const tc = await (await doc.getPage(p)).getTextContent();
+    const items = tc.items
+      .filter((i) => i.str && i.str.trim())
+      .map((i) => ({ s: i.str.replace(/\s+/g, ' ').trim(), x: i.transform[4], y: i.transform[5], w: i.width }))
+      .sort((a, b) => b.y - a.y || a.x - b.x);
+    let cur = null;
+    for (const it of items) {
+      if (cur && Math.abs(cur.y - it.y) <= 3) cur.items.push(it);
+      else out.push((cur = { page: p, y: it.y, items: [it] }));
+    }
+  }
+  for (const l of out) l.items.sort((a, b) => a.x - b.x);
+  return out;
+}
+
+const DATE_START = /^(\d{1,2}[./-]\d{1,2}[./-]\d{2,4}|\d{4}-\d{2}-\d{2})/;
+const TIME = /^\d{1,2}:\d{2}(:\d{2})?$/;
+const MONEY = /^[-−+]?\d{1,3}(?:[ \u00a0]?\d{3})*[.,]\d{2}(?:\s?[A-ZА-ЯІЄ₴$€zł]{1,3})?$/i;
+
+function headerHits(line) {
+  return line.items.filter((it) => {
+    const h = norm(it.s);
+    return h.length < 40 && Object.values(FIELDS).some((ks) => ks.some((k) => h.includes(k)));
+  }).length;
+}
+
+// Rebuilds the statement table from PDF text using the header's column positions.
+export async function pdfToRows(buf) {
+  const lines = await pdfLines(buf);
+  const hi = lines.findIndex((l) => headerHits(l) >= 2);
+  if (hi < 0) return pdfFallback(lines);
+  // header cells: merge words that sit close together
+  const cols = [];
+  for (const it of lines[hi].items) {
+    const last = cols[cols.length - 1];
+    if (last && it.x - last.end < 4) { last.text.push(it.s); last.end = it.x + it.w; }
+    else cols.push({ x: it.x, end: it.x + it.w, text: [it.s] });
+  }
+  const colOf = (it) => {
+    const c = it.x + it.w / 2;
+    let k = 0;
+    for (let i = 0; i < cols.length; i++) if (c >= cols[i].x - 6) k = i;
+    return k;
+  };
+  const dateCol = Math.max(0, cols.findIndex((c) => /дата|date|data/i.test(c.text.join(' '))));
+  const isData = (l) => DATE_START.test(l.items[0].s) && colOf(l.items[0]) <= dateCol;
+  const rows = [];
+  let row = null, rowLine = null, inHeader = true, headerDone = false;
+  for (let i = hi + 1; i < lines.length; i++) {
+    const l = lines[i];
+    if (headerHits(l) >= 2) { row = null; inHeader = true; continue; } // header repeated on a new page
+    if (isData(l)) {
+      inHeader = false;
+      headerDone = true;
+      row = cols.map(() => []);
+      rows.push(row);
+      rowLine = l;
+      for (const it of l.items) row[colOf(it)].push(it.s);
+    } else if (inHeader) {
+      if (!headerDone) for (const it of l.items) cols[colOf(it)].text.push(it.s); // header wrapped onto several lines
+    } else if (row && l.page === rowLine.page && rowLine.y - l.y < 30) {
+      // wrapped description; numbers here are usually totals, not part of the row
+      for (const it of l.items) if (!MONEY.test(it.s)) row[colOf(it)].push(it.s);
+      rowLine = l;
+    } else row = null;
+  }
+  if (!rows.length) return pdfFallback(lines);
+  return [cols.map((c) => c.text.join(' ')), ...rows.map((r) => r.map((c) => c.join(' ')))];
+}
+
+// No recognizable header: take each line that starts with a date, its first money amount and the rest as description.
+function pdfFallback(lines) {
+  const rows = [['Дата', 'Опис', 'Сума']];
+  for (const l of lines) {
+    const t = l.items.map((i) => i.s);
+    if (!DATE_START.test(t[0])) continue;
+    let date = t[0], k = 1;
+    if (TIME.test(t[1] || '')) { date += ' ' + t[1]; k = 2; }
+    const rest = t.slice(k);
+    const amount = rest.find((s) => MONEY.test(s));
+    if (!amount) continue;
+    const desc = rest.filter((s) => !MONEY.test(s) && !/^(UAH|USD|EUR|PLN|грн)$/i.test(s) && !TIME.test(s)).join(' ');
+    rows.push([date, desc, amount]);
+  }
+  return rows;
 }
 
 /* ---------- detection ---------- */
