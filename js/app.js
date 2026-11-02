@@ -587,7 +587,7 @@ function renderMore() {
 
   <section class="card settings">
     <button class="set-row" data-action="backup"><span>💾 ${t('set.backup')}<small>${t('set.backupSub')}</small></span>${icon('chev')}</button>
-    <label class="set-row"><span>📥 ${t('set.restore')}</span><input type="file" accept=".json,application/json" id="restoreFile" hidden>${icon('chev')}</label>
+    <label class="set-row"><span>📥 ${t('set.restore')}</span><input type="file" id="restoreFile" hidden>${icon('chev')}</label>
     <button class="set-row" data-action="exportCsv"><span>📤 ${t('set.csv')}</span>${icon('chev')}</button>
     ${S.demo ? `<button class="set-row" data-action="demoClear"><span>🧹 ${t('home.demoClear')}</span>${icon('chev')}</button>` : `<button class="set-row" data-action="demoLoad"><span>✨ ${t('home.demo')}</span>${icon('chev')}</button>`}
     <button class="set-row" data-action="installSheet"><span>📲 ${t('set.install')}</span>${icon('chev')}</button>
@@ -856,7 +856,7 @@ function importSheet() {
     <div class="bank-grid">${Object.entries(Imp.PRESETS).map(([k, v]) => `<button data-action="impPreset" data-v="${k}" class="${p === k ? 'on' : ''}"><span>${v.emoji}</span>${k === 'other' ? t('acc.other') : k === 'monofile' ? t('imp.monofile') : v.name}</button>`).join('')}</div>
     <div class="hint-box">${t('imp.how.' + p)}</div>
     <label class="field"><span>${t('imp.toAcc')}</span><select id="iAcc" class="select">${accs.map((a) => `<option value="${a.id}" ${match?.id === a.id ? 'selected' : ''}>${esc(a.name)} · ${a.cur}</option>`).join('')}<option value="__new" ${!match ? 'selected' : ''}>${t('imp.newAcc', { b: p === 'other' ? t('acc.other') : Imp.PRESETS[p].name })}</option></select></label>
-    <label class="btn primary big file-btn">📄 ${t('imp.choose')}<input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt,text/csv" hidden></label>
+    <label class="btn primary big file-btn">📄 ${t('imp.choose')}<input type="file" id="impFile" hidden></label>
     <p class="muted small">${t('imp.privacy')}</p>`);
 }
 
@@ -864,6 +864,8 @@ async function onImportFile(file) {
   const preset = F.imp.preset;
   let accId = $('#iAcc').value;
   try {
+    const head = new Uint8Array(await file.slice(0, 5).arrayBuffer());
+    if (/\.pdf$/i.test(file.name) || String.fromCharCode(...head) === '%PDF-') return sheet(t('imp.pdfTitle'), `<p>${t('imp.pdf')}</p><div class="hint-box">${t('imp.how.' + preset)}</div><button class="btn primary big" data-action="openImport">${t('imp.choose')}</button>`);
     toast(t('imp.reading'));
     const rows = await Imp.readTable(file, preset);
     if (rows.length < 2) throw new Error(t('imp.emptyFile'));

@@ -1,5 +1,5 @@
 // Offline support: app shell is cached; bank and rate APIs always go to the network.
-const VERSION = 'v3';
+const VERSION = 'v4';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'js/app.js', 'js/store.js', 'js/cats.js', 'js/i18n.js', 'js/insights.js', 'js/charts.js', 'js/importer.js', 'js/mono.js', 'js/demo.js',
