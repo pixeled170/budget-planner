@@ -1,0 +1,268 @@
+import { S } from './store.js';
+
+const ru = {
+  'tab.home': 'Главная', 'tab.homeTitle': 'Мой бюджет', 'tab.tx': 'Операции', 'tab.stats': 'Аналитика', 'tab.plans': 'Цели', 'tab.more': 'Ещё',
+  all: 'Все', save: 'Сохранить', saved: 'Сохранено', delete: 'Удалить', deleteSure: 'Точно удалить?', deleted: 'Удалено', edit: 'Изменить', cancel: 'Отмена', confirm: 'Подтверждение',
+  'u.sec': 'с', 'u.min': 'мин', 'u.mo': 'мес',
+  'ago.now': 'только что', 'ago.min': '{n} мин назад', 'ago.h': '{n} ч назад',
+  'err.amount': 'Введи сумму', 'err.name': 'Введи название',
+  'tone.warn': 'Обрати внимание', 'tone.good': 'Хорошо', 'tone.info': 'Совет',
+
+  'lock.title': 'Введи PIN-код', 'lock.wrong': 'Неверный PIN',
+  'onb.title': 'Привет! Это твой бюджет', 'onb.sub': 'Простой помощник, чтобы видеть, куда уходят деньги, и копить на цели.', 'onb.cur': 'Основная валюта',
+  'onb.p1': 'Monobank подключается напрямую, Privat24, Pekao и Revolut — импортом выписки',
+  'onb.p2': 'Графики по дням, неделям и месяцам — по категориям',
+  'onb.p3': 'Цели с расчётом, сколько откладывать в месяц',
+  'onb.p4': 'Умные подсказки, где можно тратить меньше',
+  'onb.p5': 'Все данные хранятся только на твоём телефоне',
+  'onb.start': 'Начать', 'onb.demo': 'Сначала посмотреть на демо-данных',
+
+  'home.welcome': 'Добро пожаловать!', 'home.welcomeText': 'Добавь первые операции — и здесь появятся графики, подсказки и прогресс целей.',
+  'home.connectMono': 'Подключить Monobank', 'home.import': 'Импортировать выписку', 'home.manual': 'Добавить вручную', 'home.demo': 'Загрузить демо-данные',
+  'home.balance': 'Баланс на счетах', 'home.spentMonth': 'Потрачено за {m}', 'home.demoNote': 'Сейчас показаны демо-данные.', 'home.demoClear': 'Удалить демо-данные',
+  'home.expenses': 'Расходы', 'home.income': 'Доходы', 'home.vsSame': 'к тому же периоду прошлого месяца', 'home.left': 'Остаток',
+  'home.week': 'Последние 7 дней', 'home.avgDay': 'в среднем', 'home.tips': 'Подсказки', 'home.allTips': 'Все ({n})', 'home.recent': 'Последние операции',
+
+  'tx.add': 'Новая операция', 'tx.edit': 'Операция', 'tx.empty': 'Пока нет операций', 'tx.emptyText': 'Подключи банк или добавь трату вручную.',
+  'tx.search': 'Поиск по операциям', 'tx.all': 'Все', 'tx.exp': 'Расходы', 'tx.inc': 'Доходы', 'tx.allAcc': 'Все счета', 'tx.nothing': 'Ничего не найдено', 'tx.more': 'Показать ещё ({n})',
+  'tx.expOne': 'Расход', 'tx.incOne': 'Доход', 'tx.trOne': 'Перевод', 'tx.cat': 'Категория', 'tx.desc': 'Описание', 'tx.descPh': 'Например: кофе с друзьями', 'tx.date': 'Дата', 'tx.acc': 'Счёт', 'tx.note': 'Заметка',
+  'tx.cashNew': '+ Наличные', 'tx.remember': 'Запомнить категорию для «{k}»', 'tx.savedRule': 'Сохранено. Похожих операций перенесено в эту категорию: {n}',
+  'tx.src.mono': 'Загружено из Monobank', 'tx.src.import': 'Импортировано из выписки', 'tx.src.demo': 'Демо-операция',
+
+  'p.day': 'День', 'p.week': 'Неделя', 'p.month': 'Месяц',
+  'stats.empty': 'Здесь будут графики', 'stats.emptyText': 'Когда появятся операции, ты увидишь, куда уходят деньги.',
+  'stats.vs.day': 'к предыдущему дню', 'stats.vs.week': 'к прошлой неделе', 'stats.vs.month': 'к прошлому месяцу', 'stats.samePeriod': 'за тот же срок',
+  'stats.perDay': 'В среднем в день', 'stats.avgLine': 'Пунктир — среднее', 'stats.where': 'Куда ушли деньги', 'stats.from': 'Откуда пришли деньги', 'stats.none': 'За этот период операций нет', 'stats.biggest': 'Самые крупные траты',
+  'cat.avg.day': 'В среднем за день', 'cat.avg.week': 'В среднем за неделю', 'cat.avg.month': 'В среднем за месяц', 'cat.ops': 'Операции за период ({n})', 'cat.allOps': 'Все операции этой категории',
+
+  'nws.title': 'Правило 50/30/20', 'nws.needs': 'Нужды', 'nws.wants': 'Желания', 'nws.savings': 'Сбережения', 'nws.target': 'ориентир', 'nws.noInc': 'Добавь доходы за месяц, чтобы увидеть доли от дохода.',
+  'nws.info': 'Популярный ориентир: <b>50%</b> дохода — на необходимое (жильё, продукты, транспорт, здоровье), <b>30%</b> — на желания (кафе, развлечения, покупки), <b>20%</b> — в сбережения и цели. Это не жёсткое правило, а точка отсчёта. Какие категории — «нужды», а какие — «желания», можно поменять в настройках категорий.',
+
+  'plans.goals': 'Цели', 'plans.limits': 'Лимиты', 'plans.subs': 'Подписки',
+  'goal.empty': 'Поставь первую цель', 'goal.emptyText': 'Машина, отпуск, подушка безопасности — назови цель и укажи сумму. Я посчитаю, сколько откладывать.',
+  'goal.leftAll': 'Осталось накопить', 'goal.needMonth': 'Нужно в месяц', 'goal.new': 'Новая цель', 'goal.edit': 'Цель', 'goal.done': 'Достигнутые',
+  'goal.reached': 'Цель достигнута 🎉', 'goal.overdue': 'Срок прошёл — можно продлить дату', 'goal.plan': 'Откладывай {m}/мес (≈ {w}/нед), чтобы успеть к сроку: {d}', 'goal.noDeadline': 'Без срока. Добавь дату — посчитаю план.',
+  'goal.eta': 'Прогноз при текущем темпе: {d}', 'goal.late': 'позже срока', 'goal.of': 'из', 'goal.left': 'Осталось', 'goal.add': 'Пополнить', 'goal.withdraw': 'Снять', 'goal.history': 'История',
+  'goal.jarLinked': 'Связана с банкой «{j}» — обновляется автоматически', 'goal.name': 'Название', 'goal.namePh': 'Например: Toyota RAV4', 'goal.icon': 'Иконка', 'goal.target': 'Сколько нужно',
+  'goal.saved': 'Уже накоплено', 'goal.deadline': 'К какой дате', 'goal.jar': 'Связать с банкой Monobank', 'goal.noJar': 'Не связывать',
+  'goal.hint': 'Цель может быть в любой валюте — например, машина в долларах. В общих итогах она пересчитается по курсу.',
+  'goal.reopen': 'Вернуть в активные', 'goal.markDone': 'Отметить достигнутой', 'goal.delQ': 'Удалить цель «{n}»?', 'goal.recommend': 'рекомендуем {v}/мес', 'goal.added': 'Отложено 👍',
+  'goal.congrats': 'Цель достигнута!', 'goal.congratsText': '«{n}» — {v}. Ты молодец! Пора ставить следующую цель.', 'goal.yay': 'Ура!', 'goal.emergencyName': 'Финансовая подушка',
+
+  'lim.empty': 'Лимиты не заданы', 'lim.emptyText': 'Задай месячный лимит на категорию — например, «кафе — не больше 3000». Я подскажу, когда приближаешься к нему.',
+  'lim.add': 'Добавить лимит', 'lim.edit': 'Лимит', 'lim.suggest': 'Предложить лимиты по моим тратам', 'lim.suggestText': 'Лимиты на 10% ниже твоих средних трат за 3 месяца. Сними галочки с лишних.',
+  'lim.apply': 'Применить', 'lim.noData': 'Пока мало данных — нужен хотя бы месяц операций.', 'lim.avg': 'В среднем ты тратишь {v} в месяц',
+  'lim.over': 'Превышен на {v}', 'lim.left': 'Осталось {v} · ~{d}/день',
+
+  'subs.month': 'В месяц', 'subs.year': 'В год', 'subs.empty': 'Подписок не найдено', 'subs.emptyText': 'Я сам нахожу регулярные платежи в операциях (Netflix, связь, спортзал). Можно добавить и вручную.',
+  'subs.add': 'Добавить подписку', 'subs.edit': 'Подписка', 'subs.auto': 'найдено автоматически', 'subs.next': 'след. ~{d}', 'subs.per.m': 'Ежемесячно', 'subs.per.y': 'Ежегодно', 'subs.per.w': 'Еженедельно',
+  'subs.autoText': 'Найдено автоматически: похожие платежи с регулярным интервалом ({n} шт.).', 'subs.hide': 'Это не подписка — скрыть', 'subs.name': 'Название', 'subs.period': 'Период', 'subs.nextDate': 'Следующий платёж',
+
+  'set.banks': 'Банки и счета', 'set.noAcc': 'Счетов пока нет.', 'set.import': 'Импорт выписки', 'set.addAcc': 'Счёт',
+  'set.lang': 'Язык', 'set.cur': 'Валюта', 'set.theme': 'Тема', 'th.auto': 'Авто', 'set.rates': 'Курсы валют', 'set.cats': 'Категории',
+  'set.pin': 'PIN-код', 'set.pinOn': 'Включён, данные зашифрованы', 'set.pinOff': 'Выключен', 'set.autolock': 'Блокировать через',
+  'set.backup': 'Резервная копия', 'set.backupSub': 'Сохранить все данные в файл', 'set.restore': 'Восстановить из копии', 'set.csv': 'Экспорт операций в CSV', 'set.install': 'Как установить на телефон',
+  'set.wipe': 'Удалить все данные', 'set.privacy': 'Все данные хранятся только на этом устройстве. Делай резервную копию время от времени.',
+
+  'acc.ops': 'операций: {n}', 'acc.hidden': 'не в общем балансе', 'acc.cash': 'Наличные', 'acc.crypto': 'Крипто / кошелёк', 'acc.other': 'Другой банк', 'acc.name': 'Название', 'acc.namePh': 'Например: Наличные',
+  'acc.type': 'Тип', 'acc.cur': 'Валюта', 'acc.balance': 'Текущий баланс', 'acc.balancePh': 'Необязательно', 'acc.sync': 'Синхронизировать этот счёт', 'acc.include': 'Учитывать в общем балансе',
+  'acc.del': 'Удалить счёт', 'acc.delQ': 'Удалить счёт «{a}» и все его операции ({n})?', 'acc.cashName': 'Наличные',
+  'acc.cryptoHint': 'Для Trust Wallet и других кошельков пока можно завести счёт «Крипто» и указать баланс вручную. Автоматическое подключение добавим позже.',
+
+  'mono.intro': 'У Monobank есть официальный личный API. С ним операции подтягиваются автоматически, ничего не нужно вводить вручную.',
+  'mono.s1': 'Открой', 'mono.s2': 'Нажми «Активувати» и подтверди вход в приложении Monobank (сканируй QR-код)', 'mono.s3': 'Скопируй токен и вставь сюда',
+  'mono.token': 'Токен', 'mono.privacy': 'Токен даёт только чтение выписки — с ним нельзя переводить деньги. Он хранится только на этом телефоне и отправляется только на api.monobank.ua.',
+  'mono.connect': 'Подключить', 'mono.checking': 'Проверяю…', 'mono.badToken': 'Токен не подошёл. Проверь, что скопировал его полностью.', 'mono.rate': 'Monobank разрешает 1 запрос в минуту. Попробуй через минуту.',
+  'mono.errNet': 'Нет связи с Monobank. Проверь интернет.', 'mono.pick': 'Какие карты подключить?', 'mono.depth': 'Загрузить историю за', 'mono.depthHint': 'Monobank отдаёт по 31 дню за запрос и не чаще раза в минуту, поэтому 12 месяцев грузятся ~12 минут на карту. Можно пользоваться приложением, пока идёт загрузка.',
+  'mono.load': 'Подключить и загрузить', 'mono.pickOne': 'Выбери хотя бы одну карту', 'mono.started': 'Синхронизация запущена', 'mono.added': 'Monobank: новых операций — {n}',
+  'mono.syncing': 'Загружаю операции', 'mono.wait': 'Следующий запрос через {s} с', 'mono.loading': 'Загрузка…', 'mono.limitNote': 'Ограничение Monobank: 1 запрос в минуту.',
+  'mono.off': 'синхронизация выключена', 'mono.last': 'обновлено {d}', 'mono.never': 'ещё не загружено', 'mono.jars': 'Банки (копилки)', 'mono.jarsHint': 'Банку можно связать с целью — прогресс будет обновляться сам.',
+  'mono.syncNow': 'Обновить сейчас', 'mono.history': 'Догрузить историю', 'mono.refresh': 'Обновить список карт и банок', 'mono.disconnect': 'Отключить Monobank', 'mono.offQ': 'Отключить Monobank? Токен удалится, загруженные операции останутся.',
+
+  'imp.title': 'Импорт выписки', 'imp.bank': 'Банк', 'imp.monofile': 'Mono (файл)', 'imp.toAcc': 'В какой счёт', 'imp.newAcc': '+ Новый счёт «{b}»', 'imp.choose': 'Выбрать файл выписки',
+  'imp.privacy': 'Файл обрабатывается прямо на телефоне и никуда не отправляется. Повторный импорт той же выписки не создаёт дублей.',
+  'imp.how.privat': '<b>Privat24:</b> открой карту → «Виписка» → выбери период → значок «Завантажити» → формат <b>Excel</b> или <b>CSV</b>.',
+  'imp.how.pekao': '<b>Pekao24:</b> «Historia» → фильтр по датам → «Pobierz» → формат <b>CSV</b>.',
+  'imp.how.revolut': '<b>Revolut:</b> откройте счёт → «…» → «Statement» → формат <b>Excel</b> или <b>CSV</b> → период → «Generate».',
+  'imp.how.monofile': '<b>Monobank:</b> карта → «Виписка» → значок «Поділитися» → формат <b>CSV</b> или <b>XLS</b>. Удобно для истории старше, чем отдаёт API.',
+  'imp.how.other': 'Подойдёт почти любая выписка в <b>CSV</b> или <b>Excel</b>: я сам найду дату, сумму и описание, а ты сможешь поправить столбцы.',
+  'imp.reading': 'Читаю файл…', 'imp.emptyFile': 'файл пустой', 'imp.err': 'Не удалось прочитать файл', 'imp.xlsxErr': 'Для Excel нужен интернет один раз (загрузка модуля). Или сохрани выписку в CSV.',
+  'imp.check': 'Проверь импорт', 'imp.found': 'Найдено операций: {n}', 'imp.none': 'Операции не распознаны — проверь столбцы ниже', 'imp.dups': 'уже загружено раньше: {n}', 'imp.bad': 'пропущено строк: {n}',
+  'imp.preview': 'Первые операции', 'imp.columns': 'Столбцы файла', 'imp.invert': 'Поменять знак сумм (если расходы в файле положительные)', 'imp.do': 'Импортировать ({n})', 'imp.done': 'Импортировано операций: {n}', 'imp.allDup': 'Все операции из этого файла уже загружены',
+  'imp.f.date': 'Дата', 'imp.f.amount': 'Сумма', 'imp.f.desc': 'Описание', 'imp.f.desc2': 'Получатель / отправитель', 'imp.f.currency': 'Валюта', 'imp.f.category': 'Категория банка', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Время', 'imp.f.fee': 'Комиссия', 'imp.f.state': 'Статус',
+
+  'rates.src': 'Источник: {s}, обновлено {d}', 'rates.default': 'примерные курсы', 'rates.manual': 'вручную', 'rates.refresh': 'Обновить по курсу НБУ', 'rates.ok': 'Курсы обновлены', 'rates.fail': 'Не удалось обновить курсы',
+  'rates.note': 'Курсы обновляются автоматически раз в несколько часов (официальный курс НБУ). Для итогов все суммы пересчитываются по текущему курсу.',
+
+  'cat.transfers': 'Переводы (не входят в расходы)', 'cat.trHint': 'Переводы между своими картами, снятие наличных и пополнение копилок не считаются тратами, чтобы не задваивать суммы. Если переводишь деньги другим людям как оплату — поменяй категорию операции.',
+  'cat.new': 'Новая категория', 'cat.name': 'Название', 'cat.kind': 'Тип', 'cat.trKind': 'Перевод (не учитывать)', 'cat.group': 'Группа для 50/30/20', 'cat.hide': 'Скрыть из выбора', 'cat.show': 'Показывать в выборе', 'cat.hidden': 'скрыта',
+  'cat.rulesReset': 'Сбросить запомненные правила ({n})',
+
+  'pin.onText': 'PIN включён: данные на телефоне зашифрованы (AES-256), без PIN их не прочитать.', 'pin.change': 'Сменить PIN', 'pin.off': 'Выключить PIN',
+  'pin.offText': 'Поставь 4-значный PIN: приложение будет блокироваться, а данные — храниться в зашифрованном виде.', 'pin.warn': 'Важно: если забудешь PIN, восстановить данные будет нельзя (только из резервной копии).',
+  'pin.set': 'Задать PIN', 'pin.new': 'Новый PIN', 'pin.repeat': 'Повтори PIN', 'pin.mismatch': 'PIN не совпадает — попробуй ещё раз', 'pin.current': 'Текущий PIN', 'pin.enabled': 'PIN включён 🔒', 'pin.disabled': 'PIN выключен',
+
+  'demo.loaded': 'Демо-данные загружены', 'demo.cleared': 'Демо-данные удалены',
+  'wipe.q': 'Удалить все операции, счета, цели и настройки? Это нельзя отменить. Сначала сделай резервную копию, если нужно.', 'wipe.ok': 'Удалить всё',
+  'restore.q': 'Восстановить данные из копии (операций: {n})? Текущие данные будут заменены.', 'restore.ok': 'Восстановить', 'restore.done': 'Данные восстановлены', 'restore.err': 'Это не похоже на файл резервной копии',
+  'install.html': `<div class="install"><h3>📱 iPhone (Safari)</h3><ol><li>Открой ссылку на приложение в <b>Safari</b></li><li>Нажми «Поделиться» <span class="kbd">⬆︎</span></li><li>Выбери «<b>На экран „Домой“</b>»</li></ol>
+    <h3>🤖 Android (Chrome)</h3><ol><li>Открой ссылку в <b>Chrome</b></li><li>Меню <span class="kbd">⋮</span> → «<b>Установить приложение</b>» (или «Добавить на главный экран»)</li></ol>
+    <p class="muted">После этого приложение открывается с иконки как обычное, работает без интернета, а данные остаются на телефоне.</p></div>`,
+
+  'ins.paceUp.t': 'Темп трат выше обычного', 'ins.paceUp': 'Прогноз на {month}: ~{forecast}. Это на {pct}% больше, чем в прошлом месяце ({prev}).',
+  'ins.paceDown.t': 'Тратишь меньше, чем в прошлом месяце', 'ins.paceDown': 'Прогноз на {month}: ~{forecast} — на {pct}% меньше, чем в прошлом месяце. Так держать!',
+  'ins.paceOk.t': 'Расходы в пределах обычного', 'ins.paceOk': 'Прогноз на {month}: ~{forecast}, в прошлом месяце было {prev}.',
+  'ins.catUp.t': '{cat}: +{pct}% к обычному', 'ins.catUp': 'С начала месяца — {cur}, а обычно к этому дню {avg}. Разница — {diff}.',
+  'ins.catDown.t': '{cat}: на {pct}% меньше обычного', 'ins.catDown': 'Ты сэкономил около {diff} по сравнению с обычным месяцем. Отличный результат!',
+  'ins.limOver.t': 'Лимит «{cat}» превышен', 'ins.limOver': 'Перерасход {over} при лимите {limit}. Попробуй компенсировать в других категориях.',
+  'ins.limNear.t': '«{cat}»: использовано {pct}% лимита', 'ins.limNear': 'Осталось {left} на {days} дн. — примерно {perDay} в день.',
+  'ins.rateGood.t': 'Норма сбережений {pct}% 💪', 'ins.rateGood': 'За прошлый месяц сохранено {saved} из {inc} дохода. Ориентир — 20%, и ты его достиг.',
+  'ins.rateMid.t': 'Норма сбережений {pct}%', 'ins.rateMid': 'За прошлый месяц отложено {saved} из {inc}. До ориентира 20% не хватает {gap} в месяц.',
+  'ins.rateNeg.t': 'Расходы больше доходов', 'ins.rateNeg': 'За прошлый месяц расходы превысили доходы на {over}. Посмотри, какие категории выросли.',
+  'ins.goalCut.t': 'Как приблизить «{goal}»', 'ins.goalCut': 'Если сократить «{cat}» на 20% (≈ {cut}/мес), накопишь на «{goal}» примерно на {months} мес. раньше.',
+  'ins.goalCutNoNet': 'Сократив «{cat}» на 20%, сможешь откладывать ещё {cut} в месяц — это {year} в год на цель.',
+  'ins.wantCut.t': 'Больше всего желаний — «{cat}»', 'ins.wantCut': 'В среднем {avg} в месяц. Минус 20% — это {cut}/мес или {year} в год. Поставь цель, и я покажу, насколько быстрее её достигнешь.',
+  'ins.small.t': 'Мелкие покупки: {n} шт. на {sum}', 'ins.small': 'Это траты до {th} за последние 30 дней. В год выходит ~{year} — незаметно, но много.',
+  'ins.subs.t': 'Подписки: {m} в месяц', 'ins.subs': 'Регулярных платежей: {n} — это {y} в год. Проверь, всеми ли ты пользуешься.',
+  'ins.weekend.t': 'Выходные дороже будней в {x} раза', 'ins.weekend': 'В выходные в среднем {we} в день, в будни — {wd}. Заранее задай себе бюджет на выходные.',
+  'ins.large.t': 'Крупная трата: {desc}', 'ins.large': '{v} ({date}) — в {k} раз больше обычной покупки в «{cat}». Если это разовая трата — всё в порядке.',
+  'ins.nospend.t': '{n} дн. без трат в этом месяце', 'ins.nospend': 'Отличная привычка! Попробуй челлендж: 2 дня без трат каждую неделю.',
+  'ins.emergency.t': 'Создай финансовую подушку', 'ins.emergency': 'Рекомендуют иметь запас на 3–6 месяцев расходов. Для тебя это {a} – {b}. Нажми, чтобы создать цель.',
+};
+
+const en = {
+  'tab.home': 'Home', 'tab.homeTitle': 'My budget', 'tab.tx': 'Transactions', 'tab.stats': 'Analytics', 'tab.plans': 'Goals', 'tab.more': 'More',
+  all: 'All', save: 'Save', saved: 'Saved', delete: 'Delete', deleteSure: 'Really delete?', deleted: 'Deleted', edit: 'Edit', cancel: 'Cancel', confirm: 'Confirm',
+  'u.sec': 's', 'u.min': 'min', 'u.mo': 'mo',
+  'ago.now': 'just now', 'ago.min': '{n} min ago', 'ago.h': '{n} h ago',
+  'err.amount': 'Enter an amount', 'err.name': 'Enter a name',
+  'tone.warn': 'Heads up', 'tone.good': 'Nice', 'tone.info': 'Tip',
+
+  'lock.title': 'Enter PIN', 'lock.wrong': 'Wrong PIN',
+  'onb.title': 'Hi! This is your budget', 'onb.sub': 'A simple helper to see where your money goes and save for goals.', 'onb.cur': 'Main currency',
+  'onb.p1': 'Monobank connects directly; Privat24, Pekao and Revolut via statement import',
+  'onb.p2': 'Daily, weekly and monthly charts by category',
+  'onb.p3': 'Goals with a monthly savings plan',
+  'onb.p4': 'Smart tips on where to spend less',
+  'onb.p5': 'All data stays on your phone',
+  'onb.start': 'Get started', 'onb.demo': 'Explore with demo data first',
+
+  'home.welcome': 'Welcome!', 'home.welcomeText': 'Add your first transactions and you will see charts, tips and goal progress here.',
+  'home.connectMono': 'Connect Monobank', 'home.import': 'Import a statement', 'home.manual': 'Add manually', 'home.demo': 'Load demo data',
+  'home.balance': 'Total balance', 'home.spentMonth': 'Spent in {m}', 'home.demoNote': 'You are looking at demo data.', 'home.demoClear': 'Remove demo data',
+  'home.expenses': 'Spent', 'home.income': 'Income', 'home.vsSame': 'vs same period last month', 'home.left': 'Left',
+  'home.week': 'Last 7 days', 'home.avgDay': 'avg', 'home.tips': 'Tips', 'home.allTips': 'All ({n})', 'home.recent': 'Recent transactions',
+
+  'tx.add': 'New transaction', 'tx.edit': 'Transaction', 'tx.empty': 'No transactions yet', 'tx.emptyText': 'Connect a bank or add an expense manually.',
+  'tx.search': 'Search transactions', 'tx.all': 'All', 'tx.exp': 'Expenses', 'tx.inc': 'Income', 'tx.allAcc': 'All accounts', 'tx.nothing': 'Nothing found', 'tx.more': 'Show more ({n})',
+  'tx.expOne': 'Expense', 'tx.incOne': 'Income', 'tx.trOne': 'Transfer', 'tx.cat': 'Category', 'tx.desc': 'Description', 'tx.descPh': 'e.g. coffee with friends', 'tx.date': 'Date', 'tx.acc': 'Account', 'tx.note': 'Note',
+  'tx.cashNew': '+ Cash', 'tx.remember': 'Remember category for “{k}”', 'tx.savedRule': 'Saved. {n} similar transactions moved to this category too',
+  'tx.src.mono': 'Synced from Monobank', 'tx.src.import': 'Imported from a statement', 'tx.src.demo': 'Demo transaction',
+
+  'p.day': 'Day', 'p.week': 'Week', 'p.month': 'Month',
+  'stats.empty': 'Charts will appear here', 'stats.emptyText': 'Once you have transactions you will see where your money goes.',
+  'stats.vs.day': 'vs previous day', 'stats.vs.week': 'vs last week', 'stats.vs.month': 'vs last month', 'stats.samePeriod': 'same days',
+  'stats.perDay': 'Average per day', 'stats.avgLine': 'Dashed line — average', 'stats.where': 'Where the money went', 'stats.from': 'Where the money came from', 'stats.none': 'No transactions in this period', 'stats.biggest': 'Biggest expenses',
+  'cat.avg.day': 'Daily average', 'cat.avg.week': 'Weekly average', 'cat.avg.month': 'Monthly average', 'cat.ops': 'Transactions in period ({n})', 'cat.allOps': 'All transactions in this category',
+
+  'nws.title': '50/30/20 rule', 'nws.needs': 'Needs', 'nws.wants': 'Wants', 'nws.savings': 'Savings', 'nws.target': 'target', 'nws.noInc': 'Add income for this month to see shares of income.',
+  'nws.info': 'A popular guideline: <b>50%</b> of income for needs (housing, groceries, transport, health), <b>30%</b> for wants (cafes, fun, shopping) and <b>20%</b> for savings and goals. It is a starting point, not a strict rule. You can change which categories are needs or wants in category settings.',
+
+  'plans.goals': 'Goals', 'plans.limits': 'Limits', 'plans.subs': 'Subscriptions',
+  'goal.empty': 'Set your first goal', 'goal.emptyText': 'A car, a trip, an emergency fund — name it, set the amount, and I will work out how much to save.',
+  'goal.leftAll': 'Left to save', 'goal.needMonth': 'Needed per month', 'goal.new': 'New goal', 'goal.edit': 'Goal', 'goal.done': 'Achieved',
+  'goal.reached': 'Goal reached 🎉', 'goal.overdue': 'Deadline passed — you can move the date', 'goal.plan': 'Save {m}/mo (≈ {w}/wk) to make it by {d}', 'goal.noDeadline': 'No deadline. Add a date to get a plan.',
+  'goal.eta': 'Forecast at the current pace: {d}', 'goal.late': 'after the deadline', 'goal.of': 'of', 'goal.left': 'Left', 'goal.add': 'Add money', 'goal.withdraw': 'Withdraw', 'goal.history': 'History',
+  'goal.jarLinked': 'Linked to the “{j}” jar — updates automatically', 'goal.name': 'Name', 'goal.namePh': 'e.g. Toyota RAV4', 'goal.icon': 'Icon', 'goal.target': 'Amount needed',
+  'goal.saved': 'Already saved', 'goal.deadline': 'Target date', 'goal.jar': 'Link a Monobank jar', 'goal.noJar': "Don't link",
+  'goal.hint': 'A goal can be in any currency, e.g. a car in dollars. Totals convert it at the current rate.',
+  'goal.reopen': 'Move back to active', 'goal.markDone': 'Mark as achieved', 'goal.delQ': 'Delete goal “{n}”?', 'goal.recommend': 'suggested {v}/mo', 'goal.added': 'Saved 👍',
+  'goal.congrats': 'Goal reached!', 'goal.congratsText': '“{n}” — {v}. Well done! Time for the next one.', 'goal.yay': 'Yay!', 'goal.emergencyName': 'Emergency fund',
+
+  'lim.empty': 'No limits yet', 'lim.emptyText': 'Set a monthly limit per category, e.g. “cafes — up to 3000”. I will warn you when you get close.',
+  'lim.add': 'Add a limit', 'lim.edit': 'Limit', 'lim.suggest': 'Suggest limits from my spending', 'lim.suggestText': 'Limits 10% below your 3-month average. Untick the ones you do not need.',
+  'lim.apply': 'Apply', 'lim.noData': 'Not enough data yet — at least a month of transactions is needed.', 'lim.avg': 'You spend {v} per month on average',
+  'lim.over': 'Over by {v}', 'lim.left': '{v} left · ~{d}/day',
+
+  'subs.month': 'Per month', 'subs.year': 'Per year', 'subs.empty': 'No subscriptions found', 'subs.emptyText': 'I detect recurring payments automatically (Netflix, phone, gym). You can also add them manually.',
+  'subs.add': 'Add subscription', 'subs.edit': 'Subscription', 'subs.auto': 'auto-detected', 'subs.next': 'next ~{d}', 'subs.per.m': 'Monthly', 'subs.per.y': 'Yearly', 'subs.per.w': 'Weekly',
+  'subs.autoText': 'Auto-detected: {n} similar payments at a regular interval.', 'subs.hide': 'Not a subscription — hide', 'subs.name': 'Name', 'subs.period': 'Period', 'subs.nextDate': 'Next payment',
+
+  'set.banks': 'Banks & accounts', 'set.noAcc': 'No accounts yet.', 'set.import': 'Import statement', 'set.addAcc': 'Account',
+  'set.lang': 'Language', 'set.cur': 'Currency', 'set.theme': 'Theme', 'th.auto': 'Auto', 'set.rates': 'Exchange rates', 'set.cats': 'Categories',
+  'set.pin': 'PIN code', 'set.pinOn': 'On, data is encrypted', 'set.pinOff': 'Off', 'set.autolock': 'Lock after',
+  'set.backup': 'Backup', 'set.backupSub': 'Save all data to a file', 'set.restore': 'Restore from backup', 'set.csv': 'Export transactions to CSV', 'set.install': 'Install on your phone',
+  'set.wipe': 'Delete all data', 'set.privacy': 'All data is stored only on this device. Make a backup from time to time.',
+
+  'acc.ops': '{n} transactions', 'acc.hidden': 'not in total', 'acc.cash': 'Cash', 'acc.crypto': 'Crypto / wallet', 'acc.other': 'Other bank', 'acc.name': 'Name', 'acc.namePh': 'e.g. Cash',
+  'acc.type': 'Type', 'acc.cur': 'Currency', 'acc.balance': 'Current balance', 'acc.balancePh': 'Optional', 'acc.sync': 'Sync this account', 'acc.include': 'Include in total balance',
+  'acc.del': 'Delete account', 'acc.delQ': 'Delete account “{a}” and all its transactions ({n})?', 'acc.cashName': 'Cash',
+  'acc.cryptoHint': 'For Trust Wallet and other wallets, create a “Crypto” account and enter the balance manually for now. Automatic connection can come later.',
+
+  'mono.intro': 'Monobank has an official personal API. With it, transactions sync automatically — nothing to type in.',
+  'mono.s1': 'Open', 'mono.s2': 'Tap “Активувати” and confirm in the Monobank app (scan the QR code)', 'mono.s3': 'Copy the token and paste it here',
+  'mono.token': 'Token', 'mono.privacy': 'The token is read-only — it cannot move money. It is stored only on this phone and sent only to api.monobank.ua.',
+  'mono.connect': 'Connect', 'mono.checking': 'Checking…', 'mono.badToken': 'The token did not work. Make sure you copied all of it.', 'mono.rate': 'Monobank allows 1 request per minute. Try again in a minute.',
+  'mono.errNet': 'Cannot reach Monobank. Check your connection.', 'mono.pick': 'Which cards to connect?', 'mono.depth': 'Load history for', 'mono.depthHint': 'Monobank returns 31 days per request, at most once a minute, so 12 months take ~12 minutes per card. You can keep using the app meanwhile.',
+  'mono.load': 'Connect and load', 'mono.pickOne': 'Pick at least one card', 'mono.started': 'Sync started', 'mono.added': 'Monobank: {n} transactions added',
+  'mono.syncing': 'Loading transactions', 'mono.wait': 'Next request in {s} s', 'mono.loading': 'Loading…', 'mono.limitNote': 'Monobank limit: 1 request per minute.',
+  'mono.off': 'sync off', 'mono.last': 'updated {d}', 'mono.never': 'not loaded yet', 'mono.jars': 'Jars', 'mono.jarsHint': 'Link a jar to a goal and its progress updates by itself.',
+  'mono.syncNow': 'Sync now', 'mono.history': 'Load more history', 'mono.refresh': 'Refresh cards and jars', 'mono.disconnect': 'Disconnect Monobank', 'mono.offQ': 'Disconnect Monobank? The token is removed; loaded transactions stay.',
+
+  'imp.title': 'Import statement', 'imp.bank': 'Bank', 'imp.monofile': 'Mono (file)', 'imp.toAcc': 'Into account', 'imp.newAcc': '+ New account “{b}”', 'imp.choose': 'Choose statement file',
+  'imp.privacy': 'The file is processed on your phone and never uploaded. Importing the same statement twice does not create duplicates.',
+  'imp.how.privat': '<b>Privat24:</b> open the card → “Виписка” → choose the period → “Завантажити” → <b>Excel</b> or <b>CSV</b>.',
+  'imp.how.pekao': '<b>Pekao24:</b> “Historia” → filter by date → “Pobierz” → <b>CSV</b>.',
+  'imp.how.revolut': '<b>Revolut:</b> open the account → “…” → “Statement” → <b>Excel</b> or <b>CSV</b> → period → “Generate”.',
+  'imp.how.monofile': '<b>Monobank:</b> card → “Виписка” → share icon → <b>CSV</b> or <b>XLS</b>. Handy for history older than the API returns.',
+  'imp.how.other': 'Almost any <b>CSV</b> or <b>Excel</b> statement works: I find the date, amount and description, and you can adjust the columns.',
+  'imp.reading': 'Reading file…', 'imp.emptyFile': 'the file is empty', 'imp.err': 'Could not read the file', 'imp.xlsxErr': 'Excel import needs internet once (to load a module). Or save the statement as CSV.',
+  'imp.check': 'Check import', 'imp.found': '{n} transactions found', 'imp.none': 'No transactions recognized — check the columns below', 'imp.dups': '{n} already imported', 'imp.bad': '{n} rows skipped',
+  'imp.preview': 'First transactions', 'imp.columns': 'File columns', 'imp.invert': 'Flip amount sign (if expenses are positive in the file)', 'imp.do': 'Import {n}', 'imp.done': '{n} transactions imported', 'imp.allDup': 'All transactions from this file are already imported',
+  'imp.f.date': 'Date', 'imp.f.amount': 'Amount', 'imp.f.desc': 'Description', 'imp.f.desc2': 'Payee / payer', 'imp.f.currency': 'Currency', 'imp.f.category': 'Bank category', 'imp.f.mcc': 'MCC', 'imp.f.time': 'Time', 'imp.f.fee': 'Fee', 'imp.f.state': 'Status',
+
+  'rates.src': 'Source: {s}, updated {d}', 'rates.default': 'approximate rates', 'rates.manual': 'manual', 'rates.refresh': 'Update from NBU', 'rates.ok': 'Rates updated', 'rates.fail': 'Could not update rates',
+  'rates.note': 'Rates update automatically every few hours (official NBU rate). Totals convert all amounts at the current rate.',
+
+  'cat.transfers': 'Transfers (not counted as spending)', 'cat.trHint': 'Transfers between your own cards, cash withdrawals and jar top-ups are not counted as spending, so nothing is counted twice. If you pay someone by transfer, change that transaction’s category.',
+  'cat.new': 'New category', 'cat.name': 'Name', 'cat.kind': 'Type', 'cat.trKind': 'Transfer (not counted)', 'cat.group': 'Group for 50/30/20', 'cat.hide': 'Hide from picker', 'cat.show': 'Show in picker', 'cat.hidden': 'hidden',
+  'cat.rulesReset': 'Reset remembered rules ({n})',
+
+  'pin.onText': 'PIN is on: data on this phone is encrypted (AES-256) and unreadable without the PIN.', 'pin.change': 'Change PIN', 'pin.off': 'Turn off PIN',
+  'pin.offText': 'Set a 4-digit PIN: the app will lock and your data will be stored encrypted.', 'pin.warn': 'Important: if you forget the PIN, the data cannot be recovered (except from a backup).',
+  'pin.set': 'Set PIN', 'pin.new': 'New PIN', 'pin.repeat': 'Repeat PIN', 'pin.mismatch': 'PINs do not match — try again', 'pin.current': 'Current PIN', 'pin.enabled': 'PIN enabled 🔒', 'pin.disabled': 'PIN disabled',
+
+  'demo.loaded': 'Demo data loaded', 'demo.cleared': 'Demo data removed',
+  'wipe.q': 'Delete all transactions, accounts, goals and settings? This cannot be undone. Make a backup first if needed.', 'wipe.ok': 'Delete everything',
+  'restore.q': 'Restore data from backup ({n} transactions)? Current data will be replaced.', 'restore.ok': 'Restore', 'restore.done': 'Data restored', 'restore.err': 'This does not look like a backup file',
+  'install.html': `<div class="install"><h3>📱 iPhone (Safari)</h3><ol><li>Open the app link in <b>Safari</b></li><li>Tap Share <span class="kbd">⬆︎</span></li><li>Choose “<b>Add to Home Screen</b>”</li></ol>
+    <h3>🤖 Android (Chrome)</h3><ol><li>Open the link in <b>Chrome</b></li><li>Menu <span class="kbd">⋮</span> → “<b>Install app</b>” (or “Add to Home screen”)</li></ol>
+    <p class="muted">Then the app opens from its icon like a normal app, works offline, and your data stays on the phone.</p></div>`,
+
+  'ins.paceUp.t': 'Spending faster than usual', 'ins.paceUp': 'Forecast for {month}: ~{forecast}. That is {pct}% more than {prevMonth} ({prev}).',
+  'ins.paceDown.t': 'Spending less than last month', 'ins.paceDown': 'Forecast for {month}: ~{forecast} — {pct}% less than {prevMonth}. Keep it up!',
+  'ins.paceOk.t': 'Spending is on track', 'ins.paceOk': 'Forecast for {month}: ~{forecast}; {prevMonth} was {prev}.',
+  'ins.catUp.t': '{cat}: +{pct}% vs usual', 'ins.catUp': 'This month so far: {cur}; usually by this day: {avg}. Difference: {diff}.',
+  'ins.catDown.t': '{cat}: {pct}% less than usual', 'ins.catDown': 'You saved about {diff} compared with a typical month. Great job!',
+  'ins.limOver.t': '“{cat}” limit exceeded', 'ins.limOver': 'Over by {over} on a {limit} limit. Try to balance it out in other categories.',
+  'ins.limNear.t': '“{cat}”: {pct}% of limit used', 'ins.limNear': '{left} left for {days} days — about {perDay} a day.',
+  'ins.rateGood.t': 'Savings rate {pct}% 💪', 'ins.rateGood': 'In {month} you kept {saved} of {inc} income. The 20% target is met.',
+  'ins.rateMid.t': 'Savings rate {pct}%', 'ins.rateMid': 'In {month} you kept {saved} of {inc}. {gap} more a month would reach the 20% target.',
+  'ins.rateNeg.t': 'Spending exceeded income', 'ins.rateNeg': 'In {month} spending exceeded income by {over}. Check which categories grew.',
+  'ins.goalCut.t': 'Reach “{goal}” sooner', 'ins.goalCut': 'Cut “{cat}” by 20% (≈ {cut}/mo) and you reach “{goal}” about {months} months sooner.',
+  'ins.goalCutNoNet': 'Cutting “{cat}” by 20% frees {cut} a month — {year} a year for your goal.',
+  'ins.wantCut.t': 'Your biggest “want”: {cat}', 'ins.wantCut': '{avg} per month on average. 20% less is {cut}/mo or {year} a year. Set a goal and I will show how much sooner you get there.',
+  'ins.small.t': 'Small purchases: {n} for {sum}', 'ins.small': 'Purchases under {th} in the last 30 days. That is ~{year} a year — easy to miss, adds up.',
+  'ins.subs.t': 'Subscriptions: {m} a month', 'ins.subs': '{n} recurring payments — {y} a year. Check that you use all of them.',
+  'ins.weekend.t': 'Weekends cost {x}× more than weekdays', 'ins.weekend': 'Weekends: {we} a day on average; weekdays: {wd}. Set yourself a weekend budget in advance.',
+  'ins.large.t': 'Large purchase: {desc}', 'ins.large': '{v} ({date}) — {k}× your typical “{cat}” purchase. Fine if it was a one-off.',
+  'ins.nospend.t': '{n} no-spend days this month', 'ins.nospend': 'Great habit! Try a challenge: 2 no-spend days every week.',
+  'ins.emergency.t': 'Build an emergency fund', 'ins.emergency': 'A common rule is 3–6 months of expenses. For you that is {a} – {b}. Tap to create the goal.',
+};
+
+const DICT = { ru, en };
+export function t(k, p = {}) {
+  const s = DICT[S.lang]?.[k] ?? en[k] ?? k;
+  return s.replace(/\{(\w+)\}/g, (_, x) => (p[x] ?? ''));
+}
+export const KEYS = { ru, en };
