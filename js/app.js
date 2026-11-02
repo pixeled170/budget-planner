@@ -866,7 +866,7 @@ async function onImportFile(file) {
   try {
     toast(t('imp.reading'));
     const rows = await Imp.readTable(file, preset);
-    if (rows.length < 2) throw new Error(t('imp.emptyFile'));
+    if (rows.length < 2 && !rows.fromPdf) throw new Error(t('imp.emptyFile'));
     const det = Imp.detect(rows, preset);
     F.imp = { ...F.imp, rows, ...det, accId, fileName: file.name };
     importMapSheet();
@@ -888,10 +888,11 @@ function importMapSheet() {
   const opt = (field, req) => `<label class="field"><span>${t('imp.f.' + field)}${req ? ' *' : ''}</span><select class="select" data-map="${field}"><option value="-1">—</option>${I2.headers.map((h, i) => `<option value="${i}" ${I2.map[field] === i ? 'selected' : ''}>${esc(h || '#' + (i + 1))}</option>`).join('')}</select></label>`;
   const range = res.tx.length ? `${fmtDate(res.tx[res.tx.length - 1].date, { day: 'numeric', month: 'short', year: 'numeric' })} – ${fmtDate(res.tx[0].date, { day: 'numeric', month: 'short', year: 'numeric' })}` : '';
   sheet(t('imp.check'), `
-    <div class="summary ${res.tx.length ? 'ok' : 'err'}"><b>${res.tx.length ? t('imp.found', { n: res.tx.length }) : res.dups ? t('imp.allDup') : t('imp.none')}</b>
+    <div class="summary ${res.tx.length ? 'ok' : 'err'}"><b>${res.tx.length ? t('imp.found', { n: res.tx.length }) : res.dups ? t('imp.allDup') : I2.rows.fromPdf ? t('imp.noTxPdf') : t('imp.none')}</b>
       <small>${range}${res.dups ? ' · ' + t('imp.dups', { n: res.dups }) : ''}${res.bad ? ' · ' + t('imp.bad', { n: res.bad }) : ''}</small></div>
     ${res.tx.length ? `<div class="label">${t('imp.preview')}</div><div class="list">${res.tx.slice(0, 5).map((x) => `<div class="row"><span class="em">${cat(x.cat).emoji}</span><span class="grow"><b>${esc(x.desc)}</b><small>${fmtDate(x.date)} · ${esc(catName(x.cat))}</small></span><span class="amt ${x.amount > 0 ? 'pos' : ''}">${fmt(x.amount, x.cur, { sign: true })}</span></div>`).join('')}</div>` : ''}
-    <details ${res.tx.length ? '' : 'open'}><summary>${t('imp.columns')}</summary>
+    ${!res.tx.length && !res.dups && I2.rows.fromPdf ? `<div class="hint-box">${t('imp.pdfNoTx')}</div>` : ''}
+    <details ${res.tx.length || I2.rows.fromPdf ? '' : 'open'}><summary>${t('imp.columns')}</summary>
       <div class="map-grid">${opt('date', 1)}${opt('amount', 1)}${opt('desc')}${opt('desc2')}${opt('currency')}${opt('category')}${opt('mcc')}${opt('time')}${opt('fee')}${opt('state')}</div>
       <label class="check"><input type="checkbox" id="impInvert" ${I2.map.invert ? 'checked' : ''}> ${t('imp.invert')}</label>
     </details>

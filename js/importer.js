@@ -87,7 +87,8 @@ export function parseCSV(text) {
 
 export async function readTable(file, preset) {
   const buf = await file.arrayBuffer();
-  if (String.fromCharCode(...new Uint8Array(buf.slice(0, 5))) === '%PDF-') return pdfToRows(buf);
+  const pdf = findPdf(buf);
+  if (pdf) return Object.assign(await pdfToRows(pdf), { fromPdf: true });
   const isXlsx = /\.(xlsx|xls|xlsm)$/i.test(file.name) || new Uint8Array(buf.slice(0, 2)).join() === '80,75';
   if (isXlsx) {
     const XLSX = await loadXLSX();
@@ -104,6 +105,24 @@ export async function readTable(file, preset) {
 }
 
 /* ---------- PDF ---------- */
+// Privat24 signs its PDFs (CMS / KEP container), so the PDF may start deep inside the file.
+function findPdf(buf) {
+  const u = new Uint8Array(buf);
+  const find = (sig, from, back) => {
+    const n = sig.length;
+    for (let i = back ? u.length - n : from; back ? i >= from : i <= u.length - n; i += back ? -1 : 1) {
+      let ok = true;
+      for (let k = 0; k < n && ok; k++) ok = u[i + k] === sig.charCodeAt(k);
+      if (ok) return i;
+    }
+    return -1;
+  };
+  const start = find('%PDF-', 0, false);
+  if (start < 0 || (start > 0 && start > 1 << 20)) return null;
+  if (start === 0) return buf;
+  const end = find('%%EOF', start, true);
+  return buf.slice(start, end > start ? end + 5 : u.length);
+}
 // Text lines of all pages, top to bottom: [{page, y, items: [{s, x, w}]}]
 async function pdfLines(buf) {
   const pdfjs = await loadPDFJS();
